@@ -5,4 +5,4 @@ SERVER="52.87.186.34"  #my actual IP address
 PRIVATE_KEY="~/.ssh/school" #path to my ssh private key
 
 # Use ssh to connect to the server using the private key
-ssh -i "$PRIVATE_KEY" "$USER@$SERVER"
+ssh -i ~/.ssh/school  "$USER@$SERVER"
