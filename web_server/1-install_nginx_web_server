@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# This script installs nginx, configures it to listen on port 80, and serves a page containing "Holberton School for the win!"
+
+# Step 1: Update package list and install nginx
+sudo apt update -y
+sudo apt install nginx -y
+
+# Step 2: Create the HTML file with the required content
+echo "Holberton School for the win!" | sudo tee /var/www/html/index.html > /dev/null
+
+# Step 3: Ensure nginx listens on port 80 and points to the correct root directory
+# The default Nginx config should already listen on port 80, but we'll ensure it's correct
+sudo sed -i 's|root /var/www/html;|root /var/www/html;|' /etc/nginx/sites-available/default
+sudo sed -i 's|# listen 80 default_server;|listen 80 default_server;|' /etc/nginx/sites-available/default
+
+# Step 4: Restart nginx without using systemctl
+sudo service nginx restart
+
+# Step 5: Verify that Nginx is running and serving the page
+echo "Nginx installed and configured. You can check it by running curl http://localhost or curl http://<your-server-ip>"
