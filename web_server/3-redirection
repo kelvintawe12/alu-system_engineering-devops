@@ -1,27 +1,36 @@
 #!/usr/bin/env bash
-# Script to configure a new Ubuntu machine to respect the task requirements
+# This script configures Nginx to redirect /redirect_me to a specified URL with a 301 status code.
 
-# Update package list and install Nginx (if not already installed)
-sudo apt-get update
-sudo apt-get install -y nginx
+# Install Nginx if not installed
+sudo apt update
+sudo apt install -y nginx
 
-# Add a simple HTML page to verify Nginx is working
-echo "Holberton School" | sudo tee /var/www/html/index.html
+# Create or modify the Nginx configuration to add the redirection
+# We're adding a server block if it doesn't exist, or modifying an existing one.
+server_block="server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
-# Define the configuration for the 301 redirect
-redirect_config="location /redirect_me/ {\n    return 301 https://https://www.youtube.com/watch?v=QH2-TGUlwu4\n"}
+    # Define server_name as your domain or IP address (if you don't have a domain, use the IP)
+    server_name _;
 
-# Add the redirection configuration to the Nginx default config file
-# Make sure to place it within the server block, just after the server_name directive
-sudo sed -i "/server_name _;/a $redirect_config" /etc/nginx/sites-available/default
+    # Location block to handle redirection
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
 
-# Test the Nginx configuration for syntax errors
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+}"
+
+# Write the server block to the default config file
+echo "$server_block" | sudo tee /etc/nginx/sites-available/default
+
+# Check if the Nginx config is correct
 sudo nginx -t
 
-# If the config test passes, restart Nginx to apply the changes
-if [ $? -eq 0 ]; then
-    sudo service nginx restart
-    echo "Nginx has been successfully configured and restarted."
-else
-    echo "Error: Nginx configuration test failed. Please check the config."
-fi
+# Restart Nginx to apply the changes
+sudo systemctl restart nginx
+
+# Confirm the changes by querying /redirect_me (this will show the 301 redirect)
+curl -sI http://localhost/redirect_me/
