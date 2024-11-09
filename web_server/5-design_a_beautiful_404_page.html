@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Oops! Page Not Found</title>
+    <style>
+        /* Basic page styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 80px;
+            color: #e74c3c;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #555;
+        }
+
+        p {
+            font-size: 18px;
+            color: #777;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .image-container img {
+            max-width: 200px;
+            margin: 20px;
+            animation: rotate 2s infinite linear;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            color: #e74c3c;
+            transform: scale(1.1);
+        }
+
+        /* Animation to rotate the image */
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile-friendly design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 60px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+            .image-container img {
+                max-width: 150px;
+            }
+        }
+
+        /* Floating particles effect */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(30px, -50px) scale(1.2);
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Image container with rotating image -->
+        <div class="image-container">
+            <img src="https://via.placeholder.com/200" alt="404 image">
+        </div>
+        <h1>Oops!</h1>
+        <h2 id="error-message">It seems like you've stumbled upon a page that doesn't exist.</h2>
+        <!-- The mandatory text you need -->
+        <p>Ceci n'est pas une page.</p>
+        <a href="/" id="back-home">Go Back Home</a>
+    </div>
+
+    <!-- JavaScript to enhance the functionality -->
+    <script>
+        // Function to dynamically change the error message after a delay
+        setTimeout(function() {
+            document.getElementById('error-message').innerText = "Just kidding, you're not lost!";
+        }, 5000);  // Changes after 5 seconds
+
+        // Particle effect function
+        function createParticles() {
+            const particleCount = 20;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.width = `${Math.random() * 10 + 5}px`;
+                particle.style.height = particle.style.width;
+                particle.style.top = `${Math.random() * window.innerHeight}px`;
+                particle.style.left = `${Math.random() * window.innerWidth}px`;
+                particle.style.animationDuration = `${Math.random() * 5 + 4}s`;
+                particle.style.animationDelay = `${Math.random() * 3}s`;
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Create particles on page load
+        window.onload = function() {
+            createParticles();
+        };
+
+        // Smooth scrolling for the "Go Back Home" link
+        document.getElementById('back-home').addEventListener('click', function(event) {
+            event.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
