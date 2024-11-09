@@ -9,7 +9,7 @@ sudo apt-get install -y nginx
 echo "Holberton School" | sudo tee /var/www/html/index.html
 
 # Define the configuration for the 301 redirect
-redirect_config="location /redirect_me/ {\n    return 301 https://www.blog.ehoneahobed.com;\n}"
+redirect_config="location /redirect_me/ {\n    return 301 https://https://www.youtube.com/watch?v=QH2-TGUlwu4\n"}
 
 # Add the redirection configuration to the Nginx default config file
 # Make sure to place it within the server block, just after the server_name directive
