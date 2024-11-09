@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# This script configures Nginx to use a custom 404 page with the message "Ceci n'est pas une page."
+
+# Step 1: Install Nginx if it's not already installed
+sudo apt update
+sudo apt install -y nginx
+
+# Step 2: Create the custom 404 page
+echo "<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <title>404 Not Found</title>
+</head>
+<body>
+    <h1>Ceci n'est pas une page</h1>
+</body>
+</html>" | sudo tee /var/www/html/404.html > /dev/null
+
+# Step 3: Configure Nginx to use the custom 404 page
+# Add the error_page directive to the default server block
+server_block="server {
+    listen 80;
+    server_name _;
+
+    root /var/www/html;
+    index index.html;
+
+    # Configure the custom 404 page
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+
+    # Optionally, you can add other configurations here, like your main site
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+}"
+
+# Write the server block configuration to the Nginx default site configuration
+echo "$server_block" | sudo tee /etc/nginx/sites-available/default > /dev/null
+
+# Step 4: Test the Nginx configuration to ensure it's correct
+sudo nginx -t
+
+# Step 5: Restart Nginx to apply the configuration changes
+sudo systemctl restart nginx
+
+# Step 6: Verify that the custom 404 page works
+# Try accessing a non-existent page to see if the 404 error with the custom page is shown
+curl -sI http://localhost/xyz
+curl http://localhost/xyz
