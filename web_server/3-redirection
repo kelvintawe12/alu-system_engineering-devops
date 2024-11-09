@@ -1,11 +1,27 @@
 #!/usr/bin/env bash
-# Script that configures a new Ubuntu machine to respect above requirements
+# Script to configure a new Ubuntu machine to respect the task requirements
 
+# Update package list and install Nginx (if not already installed)
 sudo apt-get update
 sudo apt-get install -y nginx
 
+# Add a simple HTML page to verify Nginx is working
 echo "Holberton School" | sudo tee /var/www/html/index.html
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.blog.ehoneahobed.com permanent;"
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
-sudo service nginx restart
+# Define the configuration for the 301 redirect
+redirect_config="location /redirect_me/ {\n    return 301 https://www.blog.ehoneahobed.com;\n}"
+
+# Add the redirection configuration to the Nginx default config file
+# Make sure to place it within the server block, just after the server_name directive
+sudo sed -i "/server_name _;/a $redirect_config" /etc/nginx/sites-available/default
+
+# Test the Nginx configuration for syntax errors
+sudo nginx -t
+
+# If the config test passes, restart Nginx to apply the changes
+if [ $? -eq 0 ]; then
+    sudo service nginx restart
+    echo "Nginx has been successfully configured and restarted."
+else
+    echo "Error: Nginx configuration test failed. Please check the config."
+fi
