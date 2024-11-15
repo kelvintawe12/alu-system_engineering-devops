@@ -1,0 +1,66 @@
+# 100-port_forwarding
+
+## Task: Port Forwarding from 8080 to 80
+
+Objective:
+Configure web-01 to forward incoming traffic from port 8080/TCP to port 80/TCP.
+
+Steps:
+
+1. Enable UFW and Allow Required Ports:
+   Ensure UFW (Uncomplicated Firewall) is active, and allow incoming traffic on the necessary ports.
+
+   - Allow SSH (port 22), HTTP (port 80), HTTPS (port 443), and port 8080.
+
+   Command to run:
+   sudo ufw allow 22/tcp    # Allow SSH
+   sudo ufw allow 443/tcp   # Allow HTTPS
+   sudo ufw allow 80/tcp    # Allow HTTP
+   sudo ufw allow 8080/tcp  # Allow Port 8080
+   sudo ufw enable          # Enable UFW
+
+2. Verify UFW Status:
+   Verify that the firewall is configured correctly and the required ports are allowed.
+
+   Command to run:
+   sudo ufw status verbose
+
+   Expected output: You should see that ports 22, 443, 80, and 8080 are allowed.
+
+3. Configure Port Forwarding using iptables:
+   Create an iptables rule to forward incoming traffic on port 8080 to port 80.
+
+   Command to run:
+   sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
+
+   This rule forwards incoming traffic on port 8080 to port 80.
+
+4. Save iptables Configuration:
+   Save the current iptables rules to ensure they persist across reboots.
+
+   Command to run:
+   sudo sh -c 'iptables-save > /etc/iptables/rules.v4'
+
+   If the directory `/etc/iptables/` does not exist, create it using:
+   sudo mkdir -p /etc/iptables
+
+5. Test the Configuration:
+   From another machine (e.g., web-02), test the port forwarding by using curl to access port 8080.
+
+   Command to run from web-02:
+   curl -I http://<web-01-ip>:8080
+
+   Expected output: You should see a 200 OK response, as traffic from port 8080 is being forwarded to port 80.
+
+6. Verify iptables Forwarding Rule:
+   Verify that the iptables rule is active.
+
+   Command to run:
+   sudo iptables -t nat -L -n -v
+
+   This command will list the NAT table with the forwarding rule in place.
+
+Conclusion:
+- UFW allows traffic on ports 22, 80, 443, and 8080.
+- iptables is configured to forward incoming traffic from port 8080 to port 80.
+- The configuration has been tested and confirmed to work using curl.
