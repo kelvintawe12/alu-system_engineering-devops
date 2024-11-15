@@ -1,6 +1,5 @@
 # 100-port_forwarding
-
-## Task: Port Forwarding from 8080 to 80
+# Task: Port Forwarding from 8080 to 80
 
 Objective:
 Configure web-01 to forward incoming traffic from port 8080/TCP to port 80/TCP.
