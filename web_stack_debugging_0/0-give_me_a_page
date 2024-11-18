@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# This script connects to a Docker container, installs Apache, creates a web page, and restarts Apache to serve it.
+
+# Step 1: Connect to the running Docker container
+docker exec -it vigilant_tesla bash << EOF
+
+# Step 2: Update package lists for upgrades and new packages
+apt update
+
+# Step 3: Install Apache if it's not installed
+apt install apache2 -y
+
+# Step 4: Start the Apache service if it's not running
+service apache2 start
+
+# Step 5: Create the index.html page with "Hello Holberton"
+echo "Hello Holberton" > /var/www/html/index.html
+
+# Step 6: Restart Apache to ensure changes take effect
+service apache2 restart
+
+EOF
+
+# Step 7: Print a message to indicate the fix
+echo "Apache is set up, and 'Hello Holberton' is being served at http://localhost:8080"
